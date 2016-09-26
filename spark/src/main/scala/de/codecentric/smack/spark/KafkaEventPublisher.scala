@@ -30,21 +30,14 @@ import scala.util.Random
 object KafkaEventPublisher {
   def main(args: Array[String]) {
 
-    if (args.length < 2) {
-      System.err.println("Usage: KafkaEventPublisher <metadataBrokerList> <topic> ")
-      System.exit(1)
-    }
-
-    val Array(brokers, topic) = args
-
-    val stream = getClass.getResourceAsStream("/albums_title_year.csv")
-    val albumFile = Source.fromInputStream(stream)
-    val albums = albumFile.getLines().drop(1).map(_.split(",").toVector).toVector
-    albumFile.close()
+    val stream = getClass.getResourceAsStream("/test.json")
+    val trackFile = Source.fromInputStream(stream)
+    val tracks = trackFile.getLines().toVector
+    trackFile.close()
 
     // Zookeeper connection properties
     val props = new HashMap[String, Object]()
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers)
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
     props.put(
       ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
       "org.apache.kafka.common.serialization.StringSerializer"
@@ -53,17 +46,15 @@ object KafkaEventPublisher {
       ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
       "org.apache.kafka.common.serialization.StringSerializer"
     )
+    val topic = "tracks"
 
     val producer = new KafkaProducer[String, String](props)
 
+
     // Send some messages
     while (true) {
-      val bought = Random.shuffle(albums).take(50)
-      bought
-        .map {
-          case Vector(title, year) => s"$title,$year"
-          case _                   => throw new RuntimeException("Invalid format")
-        }
+      val random = Random.shuffle(tracks).take(50)
+      random
         .foreach { str =>
           val message = new ProducerRecord[String, String](topic, null, str)
           producer.send(message)

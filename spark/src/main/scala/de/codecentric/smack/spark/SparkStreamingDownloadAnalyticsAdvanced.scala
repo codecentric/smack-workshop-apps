@@ -34,7 +34,7 @@ import scala.collection.JavaConversions.asScalaBuffer
 /**
   * Created by matthiasniehoff on 24.09.16.
   */
-object SparkDownloadAnalyticsAdvanced {
+object SparkStreamingDownloadAnalyticsAdvanced {
   def main(args: Array[String]): Unit = {
 
     Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
@@ -46,59 +46,26 @@ object SparkDownloadAnalyticsAdvanced {
     val conf = new SparkConf()
       .setAppName("Kafka Billboard Charts")
       .setMaster("local[2]")
-      //      .set("spark.cassandra.connection.host", "node-0.cassandra.mesos,node-1.cassandra.mesos,node-2.cassandra.mesos")
-      .set("spark.cassandra.connection.host", "localhost")
-      .set("spark.cassandra.connection.keep_alive_ms", "10000")
     val ssc = new StreamingContext(conf, Seconds(1))
 
-    val topicsSet = Set("topic")
+    val topicsSet = Set("tracks")
     val kafkaParams = Map[String, String]("metadata.broker.list" -> "localhost:9092")
     val stream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicsSet)
 
-    val file = ssc.sparkContext.textFile("src/main/resources/test.json")
-
     // parsen
-    val parsedStream = stream.map(s => {
-      parseJson(mapper, s._2)
-    }).cache()
 
-    // ausgeben
-    parsedStream.print(10)
+    // alle einträge mit der gleichen ID die innerhalb von 2sekunden ankommen zusammen fassen und zählen. Dies jede Minute durchführen.
+
+    // State definieren mit der State Spec funktion
     val billboardState = StateSpec.function(updateBillboardState _)
 
+    // Stream mit State mappen
 
-    // Reduce By Window
-    val windowedStream = parsedStream.map(track => (track.id, 1))
-      .reduceByKeyAndWindow(
-        { (countA, countB) => countA + countB }, { (countA, countB) => countA - countB },
-        Seconds(2), // Window Duration
-        Seconds(1)
-      ) // Slide Duration
-    // process the last 60s every 30s
-
-    // update the stream and the state
-    // as the updatedStream is used for multiple actions (saveToCassandra, print) it should be cached to prevent recomputation.
-    val updatedStream = windowedStream.mapWithState(billboardState).cache()
-
-    //
-    //      // save updated stream to cassandra
-    //      updatedStream
-    //        .map { case ((title, year), (count, _)) => (title, year, count) }
-    //        .saveToCassandra("music", "billboard_charts")
-    //
-    //      // join with additional data from cassandra
-    val joinedStream = updatedStream
-      .map { case ((title, year), (count, percentage)) => (title, year, count, percentage) }
-      .joinWithCassandraTable[(String, String)]("music", "albums", selectedColumns = SomeColumns("performer", "genre"))
-    //
-    //      // Sort and print to console with additional/joined information
-    joinedStream.transform(rdd =>
-      rdd.map { case ((title, year, count, percentage), (performer, genre)) => (count, (percentage, title, year, performer, genre)) }
-        .sortByKey(false)
-        .map { case (count, (percentage, title, year, performer, genre)) => (count, "%+.2f%%".format(percentage).replace("NaN%", "NEW!"), title, year, performer, genre) })
-      .print(10)
+    // Stream ggfs formatieren und ausgeben
 
     ssc.checkpoint("/tmp")
+    ssc.start()
+    ssc.awaitTermination()
 
   }
 
@@ -118,6 +85,14 @@ object SparkDownloadAnalyticsAdvanced {
     )
   }
 
+  /**
+    * Verwendet, um die aktuellen Downloadzahlen mit den vorherigen, gespeichert im State, zu vergleichen und die Änderung zurück zu geben.
+    * @param batchTime - Zeit des Batches, nicht relevant
+    * @param key - Der Key für den State, hier die TrackID
+    * @param value - Der neue Value, hier der Download Count
+    * @param state - Der alte Value im State, hier (Count,Veränderung)
+    * @return Ein Tupel bestehend aus dem Key und dem Count sowie der neuen Veränderung
+    */
   def updateBillboardState(batchTime: Time, key: String, value: Option[Int], state: State[(Long, Double)]): Option[(String, (Long, Double))] = {
     var billboard = (value.getOrElse(0).toLong, Double.NaN)
     if (state.exists && state.get._1 != 0) {

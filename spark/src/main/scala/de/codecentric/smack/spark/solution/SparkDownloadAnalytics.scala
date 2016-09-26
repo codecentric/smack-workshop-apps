@@ -1,10 +1,10 @@
-package de.codecentric.smack.spark
+package de.codecentric.smack.spark.solution
 
+import com.datastax.spark.connector._
 import com.fasterxml.jackson.databind.ObjectMapper
+import de.codecentric.smack.spark.model.Model.TrackByArtist
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
-import com.datastax.spark.connector._
-import de.codecentric.smack.spark.model.Model.TrackByArtist
 
 /**
   * Created by matthiasniehoff on 26.09.16.
@@ -26,10 +26,10 @@ object SparkDownloadAnalytics {
       .set("spark.cassandra.connection.keep_alive_ms", "10000")
 
     val sc = new SparkContext(conf)
-    // read Table and print
-
-    // get all tracks with popularity > 70
-
+    val tracksByArtist = sc.cassandraTable[TrackByArtist]("music","tracks_by_artist")
+    tracksByArtist.foreach(println)
+    val popularTracks = tracksByArtist.filter(_.popularity > 70.0)
+    popularTracks.foreach(println)
   }
 
 }

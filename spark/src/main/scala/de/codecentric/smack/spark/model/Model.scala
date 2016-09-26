@@ -17,25 +17,36 @@
 package de.codecentric.smack.spark.model
 
 /**
- * Created by matthiasniehoff on 25.09.16.
- */
+  * Created by matthiasniehoff on 25.09.16.
+  */
 object Model {
 
   case class Artist(
-    name: String
-  )
+                     name: String
+                   )
 
   case class Track(
-    album_name: String,
-    artists: List[Artist],
-    disc_number: Double,
-    duration_ms: Double,
-    explicit: Boolean,
-    id: String,
-    is_playable: Boolean,
-    name: String,
-    popularity: Double,
-    track_number: Double
-  )
+                    album_name: String,
+                    artists: List[Artist],
+                    disc_number: Double,
+                    duration_ms: Double,
+                    explicit: Boolean,
+                    id: String,
+                    is_playable: Boolean,
+                    name: String,
+                    popularity: Double,
+                    track_number: Double
+                  )
+
+  case class TrackByArtist(
+                            artist: String,
+                            trackid: String,
+                            disc_number: Double,
+                            duration_ms: Double,
+                            explicit: Boolean,
+                            name: String,
+                            popularity: Double,
+                            track_number: Double
+                          )
 
 }
