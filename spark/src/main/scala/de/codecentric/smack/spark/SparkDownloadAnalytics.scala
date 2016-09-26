@@ -22,6 +22,11 @@ import de.codecentric.smack.spark.model.Model.{Artist, Track}
 import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.{Seconds, StreamingContext}
+import com.datastax.spark.connector._
+import com.datastax.spark.connector.streaming._
+import kafka.serializer.StringDecoder
+import org.apache.log4j.{Level, Logger}
+import org.apache.spark.streaming.kafka.KafkaUtils
 
 import scala.collection.JavaConversions.asScalaBuffer
 
@@ -31,44 +36,43 @@ import scala.collection.JavaConversions.asScalaBuffer
 object SparkDownloadAnalytics {
   def main(args: Array[String]): Unit = {
 
+    Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
+    Logger.getLogger("com.datastax").setLevel(Level.WARN)
+    Logger.getLogger("kafka.utils").setLevel(Level.WARN)
+
     val mapper: ObjectMapper = new ObjectMapper
 
     val conf = new SparkConf()
       .setAppName("Kafka Billboard Charts")
       .setMaster("local[2]")
+      //      .set("spark.cassandra.connection.host", "node-0.cassandra.mesos,node-1.cassandra.mesos,node-2.cassandra.mesos")
+      .set("spark.cassandra.connection.host", "localhost")
+      .set("spark.cassandra.connection.keep_alive_ms", "10000")
     val ssc = new StreamingContext(conf, Seconds(1))
 
-    //    // Read from Kafka
-    //    val kafkaParams = Map[String, Object](
-    //      "bootstrap.servers" -> "localhost:9092",
-    //      "key.deserializer" -> classOf[StringDeserializer],
-    //      "value.deserializer" -> classOf[StringDeserializer],
-    //      "group.id" -> "SparkDownloadAnalytics",
-    //      "auto.offset.reset" -> "latest",
-    //      "enable.auto.commit" -> false
-    //    )
-    //
-    //    val stream = KafkaUtils.createDirectStream[String, String](
-    //      ssc,
-    //      PreferConsistent,
-    //      Subscribe[String, String](Set("someTopic"), kafkaParams)
-    //    )
+    val topicsSet = Set("topic")
+    val kafkaParams = Map[String, String]("metadata.broker.list" -> "localhost:9092")
+    val stream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicsSet)
 
-    val file = ssc.sparkContext.textFile("/Users/matthiasniehoff/dev/repos/git/smack-workshop/src/main/resources/test.json")
+    // parsen
+    val parsedStream = stream.map(s => {
+      parseJson(mapper, s._2)
+    }).cache()
 
-    val parsedStream = file.map(s => {
-      parseJson(mapper, s)
-    })
+    // ausgeben
+    parsedStream.print()
 
-    parsedStream.collect()
+    // zählen nach Album
+    val countByAlbum = parsedStream.map(track => (track.album_name, 1)).reduceByKey(_ + _)
+    countByAlbum.print()
 
-    val countByAlbum: RDD[(String, Int)] = parsedStream.map(track => (track.album_name, 1)).reduceByKey(_ + _)
-    val allTrackByArtist: RDD[(Artist, Iterable[Track])] = parsedStream.flatMap(track => track.artists.map(artist => (artist, track))).groupByKey()
+    // alle Tracks eines Artist
+    val tracksByArtist = parsedStream.flatMap(track => track.artists.map(artist => (artist, track))).groupByKey()
+    tracksByArtist.print()
 
-    // count
-    // count by key
-    // window
-    // save to cassandra
+    // speichern nach Cassandra
+    tracksByArtist.saveToCassandra("music", "tracks_by_artist")
+
   }
 
   def parseJson(mapper: ObjectMapper, s: String): Model.Track = {

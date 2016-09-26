@@ -1,5 +1,3 @@
-import com.typesafe.sbteclipse.core.EclipsePlugin.EclipseClasspathEntry.Lib
-
 lazy val smackWorkshop = project
   .copy(id = "smack-workshop")
   .in(file("."))
