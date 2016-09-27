@@ -57,6 +57,7 @@ lazy val akkaDependencies = Seq(
   "com.typesafe.akka"        %% "akka-testkit"               % akkaVer            % "test",
   // these are to avoid sbt warnings about transitive dependency conflicts
   "com.typesafe.akka"               %% "akka-stream-kafka"          % akkaStreamKafka,
+  "com.typesafe.akka"       %% "akka-http-experimental"      % akkaVer,
   //"org.apache.kafka"                %% "kafka"                      % kafkaVersion,
   "io.confluent"                    % "kafka-avro-serializer"       % confluentKafka
 ).map(_. excludeAll(
@@ -101,6 +102,8 @@ libraryDependencies ++= commonDependencies
 libraryDependencies ++= akkaDependencies
 libraryDependencies ++= testDependencies
 libraryDependencies ++= logDependencies
+libraryDependencies += "com.lambdaworks" %% "jacks" % "2.5.2"
+
 
 
 
