@@ -1,0 +1,21 @@
+{
+  "id": "ingest",
+  "cpus": 1,
+  "mem": 1024,
+
+  "instances": 1,
+  "container": {
+    "type": "DOCKER",
+    "volumes": [],
+    "docker": {
+      "image": "smackatdata2day/smack-workshop-ingest:???",
+      "forcePullImage": true
+    }
+  },
+
+  "env": {
+    "KAFKA_CONNECTION_STRING": "???",
+    "KAFKA_TOPIC": "???",
+    "WEBSOCKET_URL": "???"
+  }
+}
