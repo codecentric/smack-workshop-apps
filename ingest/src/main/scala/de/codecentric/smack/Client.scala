@@ -50,6 +50,8 @@ object Client {
       * You are free to choose a constructor for ProducerRecord, but we recommend
       * https://kafka.apache.org/0100/javadoc/org/apache/kafka/clients/producer/ProducerRecord.html#ProducerRecord(java.lang.String,%20V)
       *
+      * To convert the Track into a String, look into the methods on the object com.lambdaworks.jacks.JacksMapper
+      *
       * You have to pass the topic, use Config.kafkaTopicq
       *
       * @param opt
