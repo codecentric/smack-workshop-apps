@@ -103,6 +103,7 @@ libraryDependencies ++= akkaDependencies
 libraryDependencies ++= testDependencies
 libraryDependencies ++= logDependencies
 libraryDependencies += "com.lambdaworks" %% "jacks" % "2.5.2"
+libraryDependencies += "com.typesafe" % "config" % "1.3.1"
 
 
 
