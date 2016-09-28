@@ -41,7 +41,7 @@ object Client {
       * @param msg A websocket Message
       * @return A Track Option that either contains a track if the message was parseable or None if not
       */
-    def mapIncomingWSMessage(msg: Message): Option[Track] = JsonHandler.mapJson(msg)
+    def mapIncomingWSMessage(msg: Message): Option[Track] = ???
 
 
     /**
