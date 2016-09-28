@@ -1,6 +1,7 @@
 import sbt.Keys._
+import sbtdocker.DockerPlugin
 
-enablePlugins(JavaAppPackaging)
+enablePlugins(DockerPlugin)
 
 name := "smack-workshop-ingest"
 
@@ -106,10 +107,31 @@ libraryDependencies += "com.lambdaworks" %% "jacks" % "2.5.2"
 libraryDependencies += "com.typesafe" % "config" % "1.3.1"
 
 
+dockerfile in docker := {
+  // The assembly task generates a fat JAR file
+  val artifact: File = assembly.value
+  val artifactTargetPath = s"/app/${artifact.name}"
+  val mainclass = mainClass.in(Compile, packageBin).value.getOrElse(sys.error("Expected exactly one main class"))
 
 
+  new Dockerfile {
+    from("java:latest")
+    expose(8000)
+    add(artifact, artifactTargetPath)
+    entryPoint("java", "-jar", artifactTargetPath)
+  }
+}
 
+imageNames in docker := Seq(
 
-addCommandAlias("createAll", ";clean ;assembly ;docker:publishLocal")
+  // Sets a name with a tag that contains the project version
+  ImageName(
+    namespace = Some("smackatdata2day"),
+    repository = name.value,
+    tag = Some("v" + version.value)
+  )
+)
 
+test in assembly := {}
 
+addArtifact(artifact in (Compile, assembly), assembly)
