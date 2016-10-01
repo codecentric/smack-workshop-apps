@@ -18,7 +18,7 @@ class TestSpec extends FlatSpec with Matchers {
 
     val track = trackOpt.get
 
-    assert(track.id === "")
+    assert(track.id === "spotify:track:0BiGd2FNDQ0eh79ZHfp6tS")
 
 
   }
