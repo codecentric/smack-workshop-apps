@@ -128,7 +128,7 @@ imageNames in docker := Seq(
   ImageName(
     namespace = Some("smackatdata2day"),
     repository = name.value,
-    tag = Some("v" + version.value)
+    tag = Some(version.value)
   )
 )
 
