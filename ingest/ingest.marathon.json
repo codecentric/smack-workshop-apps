@@ -14,8 +14,8 @@
   },
 
   "env": {
-    "KAFKA_CONNECTION_STRING": "???",
-    "KAFKA_TOPIC": "???",
-    "WEBSOCKET_URL": "???"
+    "KAFKA_CONNECTION_STRING": "broker-0.kafka.mesos:9092",
+    "KAFKA_TOPIC": "spotify",
+    "WEBSOCKET_URL": "websocket.marathon.mesos"
   }
 }
