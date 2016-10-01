@@ -17,7 +17,34 @@ import org.apache.kafka.common.serialization.{ByteArraySerializer, StringSeriali
 
 import scala.concurrent.Promise
 
+
+
 object Client {
+
+  /**
+    * Implement this method by delegating to JsonHandler.mapJson
+    *
+    * @param msg A websocket Message
+    * @return A Track Option that either contains a track if the message was parseable or None if not
+    */
+  def mapIncomingWSMessage(msg: Message): Option[Track] = ???
+
+
+  /**
+    * Implement this method
+    * You can assume that the Option contains a valid Track, you can access it with opt.get
+    * You are free to choose a constructor for ProducerRecord, but we recommend
+    * https://kafka.apache.org/0100/javadoc/org/apache/kafka/clients/producer/ProducerRecord.html#ProducerRecord(java.lang.String,%20V)
+    *
+    * To convert the Track into a String, look into the methods on the object com.lambdaworks.jacks.JacksMapper
+    *
+    * You have to pass the topic, use Config.kafkaTopicq
+    *
+    * @param opt
+    * @return
+    */
+  def mapOptionalTrackToProducerRecord(opt: Option[Track]): ProducerRecord[Array[Byte], String] = ???
+
   def main(args: Array[String]) = {
 
 
@@ -33,32 +60,6 @@ object Client {
     val producerSettings = ProducerSettings(system, new ByteArraySerializer, new StringSerializer)
       .withBootstrapServers(Config.kafkaConnectionString)
     Producer.plainSink(producerSettings)
-
-
-    /**
-      * Implement this method by delegating to JsonHandler.mapJson
-      *
-      * @param msg A websocket Message
-      * @return A Track Option that either contains a track if the message was parseable or None if not
-      */
-    def mapIncomingWSMessage(msg: Message): Option[Track] = ???
-
-
-    /**
-      * Implement this method
-      * You can assume that the Option contains a valid Track, you can access it with opt.get
-      * You are free to choose a constructor for ProducerRecord, but we recommend
-      * https://kafka.apache.org/0100/javadoc/org/apache/kafka/clients/producer/ProducerRecord.html#ProducerRecord(java.lang.String,%20V)
-      *
-      * To convert the Track into a String, look into the methods on the object com.lambdaworks.jacks.JacksMapper
-      *
-      * You have to pass the topic, use Config.kafkaTopicq
-      *
-      * @param opt
-      * @return
-      */
-    def mapOptionalTrackToProducerRecord(opt: Option[Track]): ProducerRecord[Array[Byte], String] = ???
-
 
 
     // A Sink that reads Message objects and transforms them into ProducerRecord objects to send to Kafka
