@@ -1,39 +1,50 @@
 {
+  "volumes": null,
   "id": "/websocket",
   "cmd": null,
+  "args": null,
+  "user": null,
+  "env": null,
+  "instances": 1,
   "cpus": 1,
   "mem": 128,
   "disk": 0,
-  "instances": 1,
+  "gpus": 0,
+  "executor": null,
+  "constraints": null,
+  "fetch": null,
+  "storeUrls": null,
+  "backoffSeconds": 1,
+  "backoffFactor": 1.15,
+  "maxLaunchDelaySeconds": 3600,
+  "container": {
+    "docker": {
+      "image": "smackatdata2day/websocket:latest",
+      "forcePullImage": true,
+      "privileged": false,
+      "network": "HOST"
+    }
+  },
+  "healthChecks": null,
+  "readinessChecks": null,
+  "dependencies": null,
+  "upgradeStrategy": {
+    "minimumHealthCapacity": 1,
+    "maximumOverCapacity": 1
+  },
+  "labels": null,
   "acceptedResourceRoles": [
     "slave_public"
   ],
-  "container": {
-    "type": "DOCKER",
-    "volumes": [],
-    "docker": {
-      "image": "smackatdata2day/websocket",
-      "network": "BRIDGE",
-      "portMappings": [
-        {
-          "containerPort": 8080,
-          "hostPort": 8080,
-          "servicePort": 10000,
-          "protocol": "tcp",
-          "name": "8080",
-          "labels": {}
-        }
-      ],
-      "privileged": false,
-      "parameters": [],
-      "forcePullImage": true
-    }
-  },
+  "residency": null,
+  "secrets": null,
+  "taskKillGracePeriodSeconds": null,
   "portDefinitions": [
     {
-      "port": 10000,
       "protocol": "tcp",
-      "labels": {}
+      "port": 10000,
+      "name": "8080"
     }
-  ]
+  ],
+  "requirePorts": false
 }
