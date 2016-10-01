@@ -14,6 +14,7 @@ object JsonHandler {
         case message: TextMessage.Strict => {
           val msg = message.text
           val on = JacksMapper.readValue[ObjectNode](msg)
+          println(msg)
 
           val evt = on.get("eventElement").get(0)
 
