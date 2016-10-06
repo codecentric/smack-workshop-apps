@@ -2,12 +2,13 @@
 
 In this exercise, we are going to setup a Kafka Cluster in DC/OS. Then we’ll connect to it via Kafka command line tools to verify that it is working
 
-1. Open a shell
-2. Type “dcos package list” – this will fail as we have not connected our DC/OS-CLI with a cluster
-3. Issue “dcos config set core.dcos_url http://<public IP of your master node>
-4. Now it is time to install Kafka – execute “dcos package install kafka”
-5. Check the progress in your Web UIs
-6. Once the Kafka Service is healthy, we create a Kafka topic:
+1. Open the DC/OS web ui
+4. Go to Universe
+5. Search for "kafka"
+6. Select "kafka" (not confluent-kafka!) and select advanced installation
+7. Select "brokers" on the left and enter "9092" as value for port, then install
+8. Check the progress in your Web UIs
+9. Once the Kafka Service is healthy, we create a Kafka topic:
    - dcos kafka topic create spotify --partitions 3 --replication 2
 
 Testing Kafka from outside the cluster is tricky. These optional exercises download a local Kafka distribution to your VM to demonstrate message production and consumation.
