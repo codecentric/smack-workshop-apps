@@ -18,20 +18,20 @@ package de.codecentric.smack.spark
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import de.codecentric.smack.spark.model.Model
-import de.codecentric.smack.spark.model.Model.{Artist, Track, TrackByArtist}
+import de.codecentric.smack.spark.model.Model.{ Artist, Track, TrackByArtist }
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.{ Seconds, StreamingContext }
 import com.datastax.spark.connector.streaming._
 import kafka.serializer.StringDecoder
-import org.apache.log4j.{Level, Logger}
+import org.apache.log4j.{ Level, Logger }
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kafka.KafkaUtils
 
 import scala.collection.JavaConversions.asScalaBuffer
 
 /**
-  * Created by matthiasniehoff on 24.09.16.
-  */
+ * Created by matthiasniehoff on 24.09.16.
+ */
 object SparkStreamingDownloadAnalytics {
   def main(args: Array[String]): Unit = {
 
@@ -64,7 +64,6 @@ object SparkStreamingDownloadAnalytics {
     // speichern nach Cassandra
     // 1. das set flach klopfen
     // 2.  auf das korrekte Format für Cassandra bringen und speichern.
-
 
     ssc.start()
     ssc.awaitTermination()

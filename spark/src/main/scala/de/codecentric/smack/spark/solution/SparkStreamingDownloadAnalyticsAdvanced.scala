@@ -18,9 +18,9 @@ package de.codecentric.smack.spark.solution
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import de.codecentric.smack.spark.model.Model
-import de.codecentric.smack.spark.model.Model.{Artist, Track}
+import de.codecentric.smack.spark.model.Model.{ Artist, Track }
 import kafka.serializer.StringDecoder
-import org.apache.log4j.{Level, Logger}
+import org.apache.log4j.{ Level, Logger }
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka.KafkaUtils
@@ -28,8 +28,8 @@ import org.apache.spark.streaming.kafka.KafkaUtils
 import scala.collection.JavaConversions.asScalaBuffer
 
 /**
-  * Created by matthiasniehoff on 24.09.16.
-  */
+ * Created by matthiasniehoff on 24.09.16.
+ */
 object SparkStreamingDownloadAnalyticsAdvanced {
   def main(args: Array[String]): Unit = {
 
@@ -98,13 +98,13 @@ object SparkStreamingDownloadAnalyticsAdvanced {
   }
 
   /**
-    * Verwendet, um die aktuellen Downloadzahlen mit den vorherigen, gespeichert im State, zu vergleichen und die Änderung zurück zu geben.
-    * @param batchTime - Zeit des Batches, nicht relevant
-    * @param key - Der Key für den State, hier die TrackID
-    * @param value - Der neue Value, hier der Download Count
-    * @param state - Der alte Value im State, hier (Count,Veränderung)
-    * @return Ein Tupel bestehend aus dem Key und dem Count sowie der neuen Veränderung
-    */
+   * Verwendet, um die aktuellen Downloadzahlen mit den vorherigen, gespeichert im State, zu vergleichen und die Änderung zurück zu geben.
+   * @param batchTime - Zeit des Batches, nicht relevant
+   * @param key - Der Key für den State, hier die TrackID
+   * @param value - Der neue Value, hier der Download Count
+   * @param state - Der alte Value im State, hier (Count,Veränderung)
+   * @return Ein Tupel bestehend aus dem Key und dem Count sowie der neuen Veränderung
+   */
   def updateBillboardState(batchTime: Time, key: String, value: Option[Int], state: State[(Long, Double)]): Option[(String, (Long, Double))] = {
     var billboard = (value.getOrElse(0).toLong, Double.NaN)
     if (state.exists && state.get._1 != 0) {

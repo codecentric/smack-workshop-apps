@@ -50,7 +50,6 @@ object KafkaEventPublisher {
 
     val producer = new KafkaProducer[String, String](props)
 
-
     // Send some messages
     while (true) {
       val random = Random.shuffle(tracks).take(50)

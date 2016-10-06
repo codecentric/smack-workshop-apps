@@ -19,19 +19,19 @@ package de.codecentric.smack.spark.solution
 import com.datastax.spark.connector.streaming._
 import com.fasterxml.jackson.databind.ObjectMapper
 import de.codecentric.smack.spark.model.Model
-import de.codecentric.smack.spark.model.Model.{Artist, Track, TrackByArtist}
+import de.codecentric.smack.spark.model.Model.{ Artist, Track, TrackByArtist }
 import kafka.serializer.StringDecoder
-import org.apache.log4j.{Level, Logger}
+import org.apache.log4j.{ Level, Logger }
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kafka.KafkaUtils
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.{ Seconds, StreamingContext }
 
 import scala.collection.JavaConversions.asScalaBuffer
 
 /**
-  * Created by matthiasniehoff on 24.09.16.
-  */
+ * Created by matthiasniehoff on 24.09.16.
+ */
 object SparkStreamingDownloadAnalytics {
   def main(args: Array[String]): Unit = {
 
