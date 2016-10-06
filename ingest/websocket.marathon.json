@@ -22,7 +22,14 @@
       "image": "smackatdata2day/websocket:latest",
       "forcePullImage": true,
       "privileged": false,
-      "network": "HOST"
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "network": "BRIDGE"
     }
   },
   "healthChecks": null,
@@ -41,9 +48,9 @@
   "taskKillGracePeriodSeconds": null,
   "portDefinitions": [
     {
+      "port": 8080,
       "protocol": "tcp",
-      "port": 10000,
-      "name": "8080"
+      "labels": {}
     }
   ],
   "requirePorts": false
