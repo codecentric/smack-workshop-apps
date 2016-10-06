@@ -36,7 +36,7 @@ object SparkDownloadAnalytics {
 
     val conf = new SparkConf()
       .setAppName("Kafka Billboard Charts")
-      .setMaster("local[2]")
+      .setMaster("local[*]")
       //      .set("spark.cassandra.connection.host", "node-0.cassandra.mesos,node-1.cassandra.mesos,node-2.cassandra.mesos")
       .set("spark.cassandra.connection.host", "localhost")
       .set("spark.cassandra.connection.keep_alive_ms", "10000")
@@ -46,6 +46,7 @@ object SparkDownloadAnalytics {
     tracksByArtist.foreach(println)
     val popularTracks = tracksByArtist.filter(_.popularity > 70.0)
     popularTracks.foreach(println)
+    sc.stop()
   }
 
 }

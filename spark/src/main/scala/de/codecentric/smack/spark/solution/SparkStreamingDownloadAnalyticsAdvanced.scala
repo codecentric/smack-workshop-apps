@@ -41,11 +41,12 @@ object SparkStreamingDownloadAnalyticsAdvanced {
 
     val conf = new SparkConf()
       .setAppName("Kafka Billboard Charts")
-      .setMaster("local[2]")
+      .setMaster("local[*]")
     val ssc = new StreamingContext(conf, Seconds(1))
 
-    val topicsSet = Set("tracks")
+    val topicsSet = Set("spotify")
     val kafkaParams = Map[String, String]("metadata.broker.list" -> "localhost:9092")
+//    val kafkaParams = Map[String, String]("metadata.broker.list" -> "broker-0.kafka.mesos:9092")
     val stream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicsSet)
 
     // parsen

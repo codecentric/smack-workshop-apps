@@ -18,20 +18,20 @@ package de.codecentric.smack.spark
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import de.codecentric.smack.spark.model.Model
-import de.codecentric.smack.spark.model.Model.{ Artist, Track, TrackByArtist }
+import de.codecentric.smack.spark.model.Model.{Artist, Track, TrackByArtist}
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.{ Seconds, StreamingContext }
+import org.apache.spark.streaming.{Seconds, StreamingContext}
 import com.datastax.spark.connector.streaming._
 import kafka.serializer.StringDecoder
-import org.apache.log4j.{ Level, Logger }
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kafka.KafkaUtils
 
 import scala.collection.JavaConversions.asScalaBuffer
 
 /**
- * Created by matthiasniehoff on 24.09.16.
- */
+  * Created by matthiasniehoff on 24.09.16.
+  */
 object SparkStreamingDownloadAnalytics {
   def main(args: Array[String]): Unit = {
 
@@ -44,14 +44,14 @@ object SparkStreamingDownloadAnalytics {
     val conf = new SparkConf()
       .setAppName("Kafka Billboard Charts")
       .setMaster("local[*]")
-      //      .set("spark.cassandra.connection.host", "node-0.cassandra.mesos,node-1.cassandra.mesos,node-2.cassandra.mesos")
+//      .set("spark.cassandra.connection.host", "node-0.cassandra.mesos,node-1.cassandra.mesos,node-2.cassandra.mesos")
       .set("spark.cassandra.connection.host", "localhost")
       .set("spark.cassandra.connection.keep_alive_ms", "10000")
     val ssc = new StreamingContext(conf, Seconds(1))
 
-    val topicsSet = Set("tracks")
-    val kafkaParams = Map[String, String]("metadata.broker.list" -> "broker-0.kafka.mesos")
-//    val kafkaParams = Map[String, String]("metadata.broker.list" -> "localhost:9092") // for local
+    val topicsSet = Set("spotify")
+    val kafkaParams = Map[String, String]("metadata.broker.list" -> "broker-0.kafka.mesos:9092")
+    //    val kafkaParams = Map[String, String]("metadata.broker.list" -> "localhost:9092") // for local
     val stream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicsSet)
 
     // parsen

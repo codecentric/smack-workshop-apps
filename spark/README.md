@@ -28,3 +28,7 @@ CQLSH starten
 bin/cqlsh
 ```
 
+
+## Tunnel Cassandra
+
+ssh -i <<pfad/zur/pem>> core@<<masterIp>> -L 9042:node-0.cassandra.mesos:9042

@@ -46,7 +46,7 @@ object KafkaEventPublisher {
       ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
       "org.apache.kafka.common.serialization.StringSerializer"
     )
-    val topic = "tracks"
+    val topic = "spotify"
 
     val producer = new KafkaProducer[String, String](props)
 
