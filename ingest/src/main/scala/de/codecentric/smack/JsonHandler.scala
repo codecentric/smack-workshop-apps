@@ -32,13 +32,16 @@ object JsonHandler {
 
 
           val track = Track(albumName, artists, discNumber, duration, explicit, id, isPlayable, name, popularity, trackNumber)
-
+          println(track)
 
           Some(track)
 
         }
 
-        case _ => None
+        case _ => {
+          println("streamed")
+          None
+        }
       }
     } catch {
       case ex: Exception => {

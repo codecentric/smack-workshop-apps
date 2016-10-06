@@ -12,12 +12,11 @@ In this exercise, we are going to setup a Kafka Cluster in DC/OS. Then we’ll c
 
 Testing Kafka from outside the cluster is tricky. These optional exercises download a local Kafka distribution to your VM to demonstrate message production and consumation.
 
-1. From your home directory, call “wget http://mirrors.ae-online.de/apache/kafka/0.10.0.1/kafka_2.11-0.10.0.1.tgz”
-2. Extract the archive with “tar xvf kafka_2.11-0.10.0.1.tgz”
-3. Change into the kafka directory (your going to need four shells in that folder”
-4. In the first shell, start Zookeeper with “bin/zookeeper-server-start.sh config/zookeeper.properties”
-5. In the second shell, start a Kafka broker with “bin/kafka-server-start.sh config/server.properties”
-6. In the third shell, create a Kafka topic “bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 3 --topic manual-test”
-7. In the same shell, start a Kafka Consumer with “bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --new-consumer --topic manual-test”
-8. In the fourth shell, start a Kafka Producer with “bin/kafka-console-producer.sh --broker-list localhost:9092 --topic manual-test” and produce some messages
-9. Check in the third shell if the messages arrive
+
+1. Change into the kafka directory﻿ /home/smack/tools/kafka_2.11-0.10.0.1 (your going to need four shells in that folder)”
+2. In the first shell, start Zookeeper with “bin/zookeeper-server-start.sh config/zookeeper.properties”
+3. In the second shell, start a Kafka broker with “bin/kafka-server-start.sh config/server.properties”
+4. In the third shell, create a Kafka topic “bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 3 --topic manual-test”
+5. In the same shell, start a Kafka Consumer with “bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --new-consumer --topic manual-test”
+6. In the fourth shell, start a Kafka Producer with “bin/kafka-console-producer.sh --broker-list localhost:9092 --topic manual-test” and produce some messages
+7. Check in the third shell if the messages arrive
