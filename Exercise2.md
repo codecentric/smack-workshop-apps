@@ -4,7 +4,7 @@ In this exercise, we are going to setup a Kafka Cluster in DC/OS. Then we’ll c
 
 1. Open a shell
 2. Type “dcos package list” – this will fail as we have not connected our DC/OS-CLI with a cluster
-3. Issue “dcos config set core.dcos.url http://<public IP of your master node>
+3. Issue “dcos config set core.dcos_url http://<public IP of your master node>
 4. Now it is time to install Kafka – execute “dcos package install kafka”
 5. Check the progress in your Web UIs
 6. Once the Kafka Service is healthy, we create a Kafka topic:

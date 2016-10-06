@@ -5,6 +5,8 @@ lazy val smackWorkshop = project
 
 name := "smack-workshop"
 
+version := "1.0.0"
+
 libraryDependencies ++= Vector(
   Library.spark,
   Library.sparkKafka,
@@ -21,9 +23,12 @@ initialCommands := """|import de.codecentric.smack._
                       |""".stripMargin
 
 
-mergeStrategy in assembly := {
-  case PathList("META-INF", "ECLIPSEF.RSA") => MergeStrategy.discard
+assemblyMergeStrategy in assembly := {
   case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
+  case PathList("META-INF", "ECLIPSEF.RSA") => MergeStrategy.discard
+  case PathList("META-INF", "DUMMY.RSA") => MergeStrategy.discard
+  case PathList("META-INF", "ECLIPSEF.SF") => MergeStrategy.discard
+  case PathList("META-INF", "DUMMY.SF") => MergeStrategy.discard
   case _ => MergeStrategy.first
 }
 

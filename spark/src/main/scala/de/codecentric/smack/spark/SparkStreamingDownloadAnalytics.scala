@@ -43,14 +43,15 @@ object SparkStreamingDownloadAnalytics {
 
     val conf = new SparkConf()
       .setAppName("Kafka Billboard Charts")
-      .setMaster("local[2]")
+      .setMaster("local[*]")
       //      .set("spark.cassandra.connection.host", "node-0.cassandra.mesos,node-1.cassandra.mesos,node-2.cassandra.mesos")
       .set("spark.cassandra.connection.host", "localhost")
       .set("spark.cassandra.connection.keep_alive_ms", "10000")
     val ssc = new StreamingContext(conf, Seconds(1))
 
     val topicsSet = Set("tracks")
-    val kafkaParams = Map[String, String]("metadata.broker.list" -> "localhost:9092")
+    val kafkaParams = Map[String, String]("metadata.broker.list" -> "broker-0.kafka.mesos")
+//    val kafkaParams = Map[String, String]("metadata.broker.list" -> "localhost:9092") // for local
     val stream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicsSet)
 
     // parsen
