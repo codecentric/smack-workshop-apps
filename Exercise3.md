@@ -7,7 +7,7 @@ In this exercise, you will complete an Ingestion application, upload it to hub.d
 3. From the ingest root directory, run sbt test and make sure all tests pass
 4. Login into the docker registry with “sudo docker login”
    - User “smackatdata2day”
-   - Pw “to do”
+   - Pw “Sm@ckWork!”
 5. Build and Push your application with “sudo sbt -Dsbt.ivy.home=/home/smack/.ivy2 dockerBuildAndPush”
 6. After this has finished, open ingest.marathon.mesos and replace the ??? with the version you set in build.sbt
 7. Install the app with “dcos marathon app add ingest.marathon.mesos”
