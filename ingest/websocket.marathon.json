@@ -19,7 +19,7 @@
   "maxLaunchDelaySeconds": 3600,
   "container": {
     "docker": {
-      "image": "smackatdata2day/websocket:latest",
+      "image": "smackatdata2day/websocket:data2day",
       "forcePullImage": true,
       "privileged": false,
       "portMappings": [
